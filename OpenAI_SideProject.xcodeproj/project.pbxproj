@@ -8,6 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		15AC96CE2DF17A510071110E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC96CD2DF17A510071110E /* ChatViewController.swift */; };
+		15AC96E82DF17BCF0071110E /* ChatMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC96E72DF17BCF0071110E /* ChatMessageModel.swift */; };
+		15AC96EA2DF17BE70071110E /* ChatRequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC96E92DF17BE70071110E /* ChatRequestModel.swift */; };
+		15AC96EC2DF17BFE0071110E /* ChatResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC96EB2DF17BFE0071110E /* ChatResponseModel.swift */; };
+		15AC96EE2DF17C2C0071110E /* APIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC96ED2DF17C2C0071110E /* APIConfiguration.swift */; };
+		15AC96F12DF17C4D0071110E /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 15AC96F02DF17C4D0071110E /* SnapKit */; };
+		15AC96F42DF17C5E0071110E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 15AC96F32DF17C5E0071110E /* Alamofire */; };
+		15AC96F62DF17C760071110E /* ChatAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC96F52DF17C760071110E /* ChatAPIService.swift */; };
+		15AC96F82DF17CCD0071110E /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC96F72DF17CCD0071110E /* ChatViewModel.swift */; };
+		15AC96FA2DF17CFD0071110E /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC96F92DF17CFD0071110E /* ChatMessageCell.swift */; };
+		15AC96FC2DF17D2A0071110E /* ChatInputBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC96FB2DF17D2A0071110E /* ChatInputBarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +42,14 @@
 		15AC96AD2DF1796E0071110E /* OpenAI_SideProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenAI_SideProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		15AC96B72DF1796E0071110E /* OpenAI_SideProjectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenAI_SideProjectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		15AC96CD2DF17A510071110E /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		15AC96E72DF17BCF0071110E /* ChatMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageModel.swift; sourceTree = "<group>"; };
+		15AC96E92DF17BE70071110E /* ChatRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestModel.swift; sourceTree = "<group>"; };
+		15AC96EB2DF17BFE0071110E /* ChatResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatResponseModel.swift; sourceTree = "<group>"; };
+		15AC96ED2DF17C2C0071110E /* APIConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfiguration.swift; sourceTree = "<group>"; };
+		15AC96F52DF17C760071110E /* ChatAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAPIService.swift; sourceTree = "<group>"; };
+		15AC96F72DF17CCD0071110E /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		15AC96F92DF17CFD0071110E /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
+		15AC96FB2DF17D2A0071110E /* ChatInputBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -70,6 +88,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15AC96F12DF17C4D0071110E /* SnapKit in Frameworks */,
+				15AC96F42DF17C5E0071110E /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +113,10 @@
 		15AC968B2DF1796C0071110E = {
 			isa = PBXGroup;
 			children = (
+				15AC96ED2DF17C2C0071110E /* APIConfiguration.swift */,
+				15AC96D12DF17B780071110E /* Services */,
+				15AC96D02DF17B720071110E /* ViewModels */,
+				15AC96CF2DF17B690071110E /* Models */,
 				15AC96CB2DF17A370071110E /* Views */,
 				15AC96962DF1796C0071110E /* OpenAI_SideProject */,
 				15AC96B02DF1796E0071110E /* OpenAI_SideProjectTests */,
@@ -123,8 +147,44 @@
 			isa = PBXGroup;
 			children = (
 				15AC96CD2DF17A510071110E /* ChatViewController.swift */,
+				15AC96F92DF17CFD0071110E /* ChatMessageCell.swift */,
+				15AC96FB2DF17D2A0071110E /* ChatInputBarView.swift */,
 			);
 			path = ChatView;
+			sourceTree = "<group>";
+		};
+		15AC96CF2DF17B690071110E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				15AC96D22DF17B7E0071110E /* ChatModels */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		15AC96D02DF17B720071110E /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				15AC96F72DF17CCD0071110E /* ChatViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		15AC96D12DF17B780071110E /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				15AC96F52DF17C760071110E /* ChatAPIService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		15AC96D22DF17B7E0071110E /* ChatModels */ = {
+			isa = PBXGroup;
+			children = (
+				15AC96E72DF17BCF0071110E /* ChatMessageModel.swift */,
+				15AC96E92DF17BE70071110E /* ChatRequestModel.swift */,
+				15AC96EB2DF17BFE0071110E /* ChatResponseModel.swift */,
+			);
+			path = ChatModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -147,6 +207,8 @@
 			);
 			name = OpenAI_SideProject;
 			packageProductDependencies = (
+				15AC96F02DF17C4D0071110E /* SnapKit */,
+				15AC96F32DF17C5E0071110E /* Alamofire */,
 			);
 			productName = OpenAI_SideProject;
 			productReference = 15AC96942DF1796C0071110E /* OpenAI_SideProject.app */;
@@ -230,6 +292,10 @@
 			);
 			mainGroup = 15AC968B2DF1796C0071110E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				15AC96EF2DF17C4D0071110E /* XCRemoteSwiftPackageReference "SnapKit" */,
+				15AC96F22DF17C5E0071110E /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 15AC96952DF1796C0071110E /* Products */;
 			projectDirPath = "";
@@ -271,7 +337,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15AC96F62DF17C760071110E /* ChatAPIService.swift in Sources */,
+				15AC96EA2DF17BE70071110E /* ChatRequestModel.swift in Sources */,
+				15AC96EE2DF17C2C0071110E /* APIConfiguration.swift in Sources */,
+				15AC96EC2DF17BFE0071110E /* ChatResponseModel.swift in Sources */,
 				15AC96CE2DF17A510071110E /* ChatViewController.swift in Sources */,
+				15AC96FA2DF17CFD0071110E /* ChatMessageCell.swift in Sources */,
+				15AC96FC2DF17D2A0071110E /* ChatInputBarView.swift in Sources */,
+				15AC96F82DF17CCD0071110E /* ChatViewModel.swift in Sources */,
+				15AC96E82DF17BCF0071110E /* ChatMessageModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,6 +668,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		15AC96EF2DF17C4D0071110E /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		15AC96F22DF17C5E0071110E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		15AC96F02DF17C4D0071110E /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 15AC96EF2DF17C4D0071110E /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		15AC96F32DF17C5E0071110E /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 15AC96F22DF17C5E0071110E /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 15AC968C2DF1796C0071110E /* Project object */;
 }
