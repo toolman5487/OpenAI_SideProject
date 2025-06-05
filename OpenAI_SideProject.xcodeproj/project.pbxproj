@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		15AC96CE2DF17A510071110E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC96CD2DF17A510071110E /* ChatViewController.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		15AC96AE2DF1796E0071110E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		15AC96942DF1796C0071110E /* OpenAI_SideProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenAI_SideProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15AC96AD2DF1796E0071110E /* OpenAI_SideProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenAI_SideProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		15AC96B72DF1796E0071110E /* OpenAI_SideProjectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenAI_SideProjectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		15AC96CD2DF17A510071110E /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -88,6 +93,7 @@
 		15AC968B2DF1796C0071110E = {
 			isa = PBXGroup;
 			children = (
+				15AC96CB2DF17A370071110E /* Views */,
 				15AC96962DF1796C0071110E /* OpenAI_SideProject */,
 				15AC96B02DF1796E0071110E /* OpenAI_SideProjectTests */,
 				15AC96BA2DF1796E0071110E /* OpenAI_SideProjectUITests */,
@@ -103,6 +109,22 @@
 				15AC96B72DF1796E0071110E /* OpenAI_SideProjectUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		15AC96CB2DF17A370071110E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				15AC96CC2DF17A3D0071110E /* ChatView */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		15AC96CC2DF17A3D0071110E /* ChatView */ = {
+			isa = PBXGroup;
+			children = (
+				15AC96CD2DF17A510071110E /* ChatViewController.swift */,
+			);
+			path = ChatView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,6 +271,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15AC96CE2DF17A510071110E /* ChatViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
