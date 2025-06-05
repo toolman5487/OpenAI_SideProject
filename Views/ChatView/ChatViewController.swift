@@ -11,9 +11,8 @@ import SnapKit
 
 class ChatViewController: UIViewController {
     
-    private var chatViewModel:ChatViewModel!
+    private var chatViewModel: ChatViewModel!
     private var cancellables = Set<AnyCancellable>()
-    
     override var inputAccessoryView: UIView? { inputBarView }
     override var canBecomeFirstResponder: Bool { true }
     
@@ -23,8 +22,10 @@ class ChatViewController: UIViewController {
         return view
     }()
     
-    private let tableView:UITableView = {
+    private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
+        tableView.backgroundColor = .black
+        tableView.separatorStyle = .none
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         return tableView
     }()
@@ -36,7 +37,7 @@ class ChatViewController: UIViewController {
         tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
     
-    private func bindingViewModel(){
+    private func bindingViewModel() {
         chatViewModel = ChatViewModel(chatService: ChatAPIService())
         chatViewModel.$messages
             .receive(on: DispatchQueue.main)
@@ -47,7 +48,7 @@ class ChatViewController: UIViewController {
             .store(in: &cancellables)
     }
     
-    private func layout(){
+    private func layout() {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()
@@ -61,25 +62,16 @@ class ChatViewController: UIViewController {
         tableView.register(ChatMessageCell.self, forCellReuseIdentifier: "ChatMessageCell")
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .black
         configureTableView()
         layout()
         bindingViewModel()
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.becomeFirstResponder()
-        
-        print("VC didAppear - becomeFirstResponder")
-    }
-    
 }
 
-extension ChatViewController:UITableViewDelegate,UITableViewDataSource{
+extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatViewModel.messages.count
@@ -91,8 +83,6 @@ extension ChatViewController:UITableViewDelegate,UITableViewDataSource{
         cell.configure(with: message.content)
         return cell
     }
-    
-    
 }
 
 extension ChatViewController: ChatInputBarViewDelegate {
