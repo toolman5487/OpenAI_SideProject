@@ -15,12 +15,12 @@ final class ChatViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     private let chatService: ChatServiceProtocol
+    private var chatRoom: ChatRoom
     
-    init(chatService: ChatServiceProtocol) {
+    init(chatRoom: ChatRoom, chatService: ChatServiceProtocol) {
+        self.chatRoom = chatRoom
         self.chatService = chatService
-        self.messages = [
-            ChatMessage(role: .system, content: "我是 OpenAI!")
-        ]
+        self.messages = chatRoom.messages.isEmpty ? [ChatMessage(role: .system, content: "你是一個有用的助手。")] : chatRoom.messages
     }
     
     func sendUserMessage(_ content: String) {
@@ -29,6 +29,11 @@ final class ChatViewModel: ObservableObject {
         errorMessage = nil
         let userMessage = ChatMessage(role: .user, content: content, status: .sending)
         messages.append(userMessage)
+        
+        if chatRoom.title.isEmpty {
+            chatRoom.title = content
+            ChatRoomManager.shared.updateChatRoom(chatRoom)
+        }
         
         let request = ChatRequest(model: "gpt-3.5-turbo", messages: messages)
         
@@ -59,6 +64,8 @@ final class ChatViewModel: ObservableObject {
                         self?.errorMessage = "Error：\(error.localizedDescription)"
                     }
                 }
+                self?.chatRoom.messages = self?.messages ?? []
+                ChatRoomManager.shared.updateChatRoom(self?.chatRoom ?? ChatRoom(title: ""))
             }
         }
     }

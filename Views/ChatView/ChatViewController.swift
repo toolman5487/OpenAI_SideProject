@@ -16,6 +16,7 @@ class ChatViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     private var inputBarBottomConstraint: Constraint?
     private var lottieTitleView: LottieAnimationView?
+    private var chatRoom: ChatRoom
     
     private lazy var inputBarView: ChatInputBarView = {
         let view = ChatInputBarView()
@@ -88,8 +89,7 @@ class ChatViewController: UIViewController {
     }
     
     private func bindingViewModel() {
-        chatViewModel = ChatViewModel(chatService: ChatAPIService())
-        
+        chatViewModel = ChatViewModel(chatRoom: chatRoom, chatService: ChatAPIService())
         chatViewModel.$messages
             .receive(on: DispatchQueue.main)
             .scan(([], [])) { ($0.1, $1) }
@@ -164,6 +164,8 @@ class ChatViewController: UIViewController {
             navBar.compactAppearance = appearance
             navBar.tintColor = .label
         }
+        let folderImage = UIImage(systemName: "folder.fill")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: folderImage, style: .plain, target: self, action: #selector(showChatRoomList))
     }
     
     private func setupTableViewTapToDismissKeyboard() {
@@ -185,6 +187,15 @@ class ChatViewController: UIViewController {
             name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
+    }
+    
+    init(chatRoom: ChatRoom) {
+        self.chatRoom = chatRoom
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -232,6 +243,11 @@ class ChatViewController: UIViewController {
     
     @objc private func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    @objc private func showChatRoomList() {
+        let listVC = ChatRoomListViewController()
+        navigationController?.pushViewController(listVC, animated: true)
     }
     
     override func viewDidLayoutSubviews() {

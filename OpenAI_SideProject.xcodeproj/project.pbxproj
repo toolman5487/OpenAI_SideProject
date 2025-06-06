@@ -21,6 +21,9 @@
 		15AC96FF2DF2C0150071110E /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 15AC96FE2DF2C0150071110E /* Lottie */; };
 		15AC97022DF2C1050071110E /* AIAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = 15AC97012DF2C1050071110E /* AIAnimation.json */; };
 		15AC97042DF2D8490071110E /* loadingPoint.json in Resources */ = {isa = PBXBuildFile; fileRef = 15AC97032DF2D8490071110E /* loadingPoint.json */; };
+		15AC97302DF2E6610071110E /* ChatRoomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC972F2DF2E6610071110E /* ChatRoomModel.swift */; };
+		15AC97332DF2E6BC0071110E /* ChatRoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC97322DF2E6BC0071110E /* ChatRoomManager.swift */; };
+		15AC97352DF2E7250071110E /* ChatRoomListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AC97342DF2E7250071110E /* ChatRoomListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +58,9 @@
 		15AC96FB2DF17D2A0071110E /* ChatInputBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBarView.swift; sourceTree = "<group>"; };
 		15AC97012DF2C1050071110E /* AIAnimation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AIAnimation.json; sourceTree = "<group>"; };
 		15AC97032DF2D8490071110E /* loadingPoint.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = loadingPoint.json; sourceTree = "<group>"; };
+		15AC972F2DF2E6610071110E /* ChatRoomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomModel.swift; sourceTree = "<group>"; };
+		15AC97322DF2E6BC0071110E /* ChatRoomManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomManager.swift; sourceTree = "<group>"; };
+		15AC97342DF2E7250071110E /* ChatRoomListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -119,6 +125,7 @@
 		15AC968B2DF1796C0071110E = {
 			isa = PBXGroup;
 			children = (
+				15AC97312DF2E6AA0071110E /* Managers */,
 				15AC97002DF2C01E0071110E /* Animations */,
 				15AC96D12DF17B780071110E /* Services */,
 				15AC96D02DF17B720071110E /* ViewModels */,
@@ -155,6 +162,7 @@
 				15AC96CD2DF17A510071110E /* ChatViewController.swift */,
 				15AC96F92DF17CFD0071110E /* ChatMessageCell.swift */,
 				15AC96FB2DF17D2A0071110E /* ChatInputBarView.swift */,
+				15AC97342DF2E7250071110E /* ChatRoomListViewController.swift */,
 			);
 			path = ChatView;
 			sourceTree = "<group>";
@@ -190,6 +198,7 @@
 				15AC96E72DF17BCF0071110E /* ChatMessageModel.swift */,
 				15AC96E92DF17BE70071110E /* ChatRequestModel.swift */,
 				15AC96EB2DF17BFE0071110E /* ChatResponseModel.swift */,
+				15AC972F2DF2E6610071110E /* ChatRoomModel.swift */,
 			);
 			path = ChatModels;
 			sourceTree = "<group>";
@@ -201,6 +210,14 @@
 				15AC97012DF2C1050071110E /* AIAnimation.json */,
 			);
 			path = Animations;
+			sourceTree = "<group>";
+		};
+		15AC97312DF2E6AA0071110E /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				15AC97322DF2E6BC0071110E /* ChatRoomManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -362,9 +379,12 @@
 				15AC96EE2DF17C2C0071110E /* APIConfiguration.swift in Sources */,
 				15AC96EC2DF17BFE0071110E /* ChatResponseModel.swift in Sources */,
 				15AC96CE2DF17A510071110E /* ChatViewController.swift in Sources */,
+				15AC97302DF2E6610071110E /* ChatRoomModel.swift in Sources */,
+				15AC97332DF2E6BC0071110E /* ChatRoomManager.swift in Sources */,
 				15AC96FA2DF17CFD0071110E /* ChatMessageCell.swift in Sources */,
 				15AC96FC2DF17D2A0071110E /* ChatInputBarView.swift in Sources */,
 				15AC96F82DF17CCD0071110E /* ChatViewModel.swift in Sources */,
+				15AC97352DF2E7250071110E /* ChatRoomListViewController.swift in Sources */,
 				15AC96E82DF17BCF0071110E /* ChatMessageModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
