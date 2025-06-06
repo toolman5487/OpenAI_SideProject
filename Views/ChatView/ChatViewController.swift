@@ -89,15 +89,20 @@ class ChatViewController: UIViewController {
     
     private func bindingViewModel() {
         chatViewModel = ChatViewModel(chatService: ChatAPIService())
+        
         chatViewModel.$messages
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
+            .scan(([], [])) { ($0.1, $1) }
+            .sink { [weak self] oldAndNew in
+                let (oldMessages, newMessages) = oldAndNew
                 self?.tableView.reloadData()
                 self?.updateTableFooter()
-                self?.scrollToBottom()
+                if newMessages.count > oldMessages.count {
+                    self?.scrollToBottom()
+                }
             }
             .store(in: &cancellables)
-            
+        
         chatViewModel.$errorMessage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] errorMessage in
@@ -106,7 +111,7 @@ class ChatViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-            
+        
         chatViewModel.$isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
@@ -161,14 +166,13 @@ class ChatViewController: UIViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupNavigationTitle()
-        view.backgroundColor = .systemBackground
-        configureTableView()
-        layout()
-        bindingViewModel()
-        
+    private func setupTableViewTapToDismissKeyboard() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(tap)
+    }
+    
+    private func setupKeyboardObservers() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillShow),
@@ -181,6 +185,17 @@ class ChatViewController: UIViewController {
             name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupNavigationTitle()
+        view.backgroundColor = .systemBackground
+        configureTableView()
+        layout()
+        bindingViewModel()
+        setupTableViewTapToDismissKeyboard()
+        setupKeyboardObservers()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -198,12 +213,9 @@ class ChatViewController: UIViewController {
         UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions(rawValue: curve << 16), animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
-       
-        let bottomInset = keyboardHeight + inputBarView.frame.height
-        tableView.contentInset.bottom = bottomInset
-        tableView.scrollIndicatorInsets.bottom = bottomInset
+        tableView.contentInset.bottom = keyboardHeight
+        tableView.scrollIndicatorInsets.bottom = keyboardHeight
         updateTableFooter()
-        scrollToBottom()
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {
@@ -213,19 +225,18 @@ class ChatViewController: UIViewController {
         UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions(rawValue: curve << 16), animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
-        
-        tableView.contentInset.bottom = inputBarView.frame.height
-        tableView.scrollIndicatorInsets.bottom = inputBarView.frame.height
+        tableView.contentInset.bottom = 0
+        tableView.scrollIndicatorInsets.bottom = 0
         updateTableFooter()
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateTableFooter()
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
     }
 }
 
