@@ -86,6 +86,7 @@ class ChatInputBarView: UIView {
         
         delegate?.chatInputBar(self, didSend: text)
         textView.text = ""
+        textView.resignFirstResponder()
     }
     
     override var intrinsicContentSize: CGSize {

@@ -14,13 +14,21 @@ protocol ChatServiceProtocol {
 
 final class ChatAPIService: ChatServiceProtocol {
     
+    private let session: Session
+    
+    init() {
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 30
+        configuration.timeoutIntervalForResource = 300
+        configuration.waitsForConnectivity = true
+        self.session = Session(configuration: configuration)
+    }
+    
     func sendMessage(request: ChatRequest, completion: @escaping (Result<ChatResponse, Error>) -> Void) {
         let headers: HTTPHeaders = [
             "Authorization": "Bearer \(APIConfiguration.apiKey)",
             "Content-Type": "application/json"
         ]
-
-        print("發送請求到 OpenAI API...")
         
         let parameters: [String: Any] = [
             "model": request.model,
@@ -29,10 +37,8 @@ final class ChatAPIService: ChatServiceProtocol {
                 "content": $0.content
             ]}
         ]
-        
-        print("請求內容：\(parameters)")
 
-        AF.request(
+        session.request(
             APIConfiguration.baseURL,
             method: .post,
             parameters: parameters,
@@ -43,16 +49,57 @@ final class ChatAPIService: ChatServiceProtocol {
         .responseDecodable(of: ChatResponse.self) { response in
             switch response.result {
             case .success(let chatResponse):
-                print("收到成功回應：\(chatResponse)")
                 completion(.success(chatResponse))
             case .failure(let error):
-                print("API 錯誤：\(error)")
                 if let data = response.data,
-                   let errorJson = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                    print("錯誤詳情：\(errorJson)")
+                   let errorResponse = try? JSONDecoder().decode(OpenAIErrorResponse.self, from: data) {
+                    completion(.failure(OpenAIError.apiError(errorResponse)))
+                } else if let afError = error as? AFError {
+                    completion(.failure(OpenAIError.networkError(afError)))
+                } else {
+                    completion(.failure(OpenAIError.networkError(error)))
                 }
-                completion(.failure(error))
             }
+        }
+    }
+}
+
+
+struct OpenAIErrorResponse: Codable {
+    let error: OpenAIErrorDetail
+}
+
+struct OpenAIErrorDetail: Codable {
+    let message: String
+    let type: String?
+    let code: String?
+}
+
+enum OpenAIError: Error {
+    case apiError(OpenAIErrorResponse)
+    case invalidResponse
+    case networkError(Error)
+    
+    var localizedDescription: String {
+        switch self {
+        case .apiError(let response):
+            return "API 錯誤：\(response.error.message)"
+        case .invalidResponse:
+            return "無效的回應格式"
+        case .networkError(let error):
+            if let afError = error as? AFError {
+                switch afError {
+                case .sessionTaskFailed(let underlyingError):
+                    return "網路連接失敗：\(underlyingError.localizedDescription)"
+                case .responseValidationFailed(let reason):
+                    return "回應驗證失敗：\(reason)"
+                case .responseSerializationFailed(let reason):
+                    return "回應解析失敗：\(reason)"
+                default:
+                    return "網路錯誤：\(afError.localizedDescription)"
+                }
+            }
+            return "網路錯誤：\(error.localizedDescription)"
         }
     }
 }

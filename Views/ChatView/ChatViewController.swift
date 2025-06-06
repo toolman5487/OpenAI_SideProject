@@ -8,11 +8,14 @@
 import UIKit
 import Combine
 import SnapKit
+import Lottie
 
 class ChatViewController: UIViewController {
     
     private var chatViewModel: ChatViewModel!
     private var cancellables = Set<AnyCancellable>()
+    private var inputBarBottomConstraint: Constraint?
+    private var lottieTitleView: LottieAnimationView?
     
     private lazy var inputBarView: ChatInputBarView = {
         let view = ChatInputBarView()
@@ -30,15 +33,12 @@ class ChatViewController: UIViewController {
         return tableView
     }()
     
-    private var inputBarBottomConstraint: Constraint?
-    
     private func scrollToBottom() {
         let row = tableView.numberOfRows(inSection: 0) - 1
         guard row >= 0 else { return }
         let indexPath = IndexPath(row: row, section: 0)
         tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
 
-        // 如果內容高度不足以填滿tableView，強制讓內容貼底
         let contentHeight = tableView.contentSize.height
         let tableHeight = tableView.bounds.height
         if contentHeight < tableHeight {
@@ -57,10 +57,38 @@ class ChatViewController: UIViewController {
         tableView.tableFooterView = footerView
     }
     
+    private func showError(_ message: String) {
+        let alert = UIAlertController(
+            title: "錯誤",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "確定", style: .default))
+        self.present(alert, animated: true)
+    }
+    
+    private func showLottieTitle() {
+        if lottieTitleView == nil {
+            let lottieView = LottieAnimationView(name: "loadingPoint")
+            lottieView.loopMode = .loop
+            lottieView.contentMode = .scaleAspectFill
+            lottieView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+            lottieTitleView = lottieView
+        }
+        lottieTitleView?.isHidden = false
+        lottieTitleView?.play()
+        self.navigationItem.titleView = lottieTitleView
+    }
+
+    private func showTextTitle() {
+        lottieTitleView?.stop()
+        lottieTitleView?.isHidden = true
+        self.navigationItem.titleView = nil
+        self.navigationItem.title = "Chat OpenAI"
+    }
+    
     private func bindingViewModel() {
         chatViewModel = ChatViewModel(chatService: ChatAPIService())
-        
-        // 監聽訊息更新
         chatViewModel.$messages
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -70,24 +98,24 @@ class ChatViewController: UIViewController {
             }
             .store(in: &cancellables)
             
-        // 監聽錯誤訊息
         chatViewModel.$errorMessage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] errorMessage in
                 if let errorMessage = errorMessage {
-                    let alert = UIAlertController(title: "錯誤", message: errorMessage, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "確定", style: .default))
-                    self?.present(alert, animated: true)
+                    self?.showError(errorMessage)
                 }
             }
             .store(in: &cancellables)
             
-        // 監聽載入狀態
         chatViewModel.$isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
-                // 可以在這裡更新 UI 來顯示載入狀態
-                print("載入狀態：\(isLoading)")
+                guard let self = self else { return }
+                if isLoading {
+                    self.showLottieTitle()
+                } else {
+                    self.showTextTitle()
+                }
             }
             .store(in: &cancellables)
     }
@@ -116,13 +144,31 @@ class ChatViewController: UIViewController {
         tableView.alwaysBounceVertical = true
     }
     
+    private func setupNavigationTitle() {
+        self.navigationItem.title = "Chat AI"
+        if let navBar = self.navigationController?.navigationBar {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .systemBackground
+            appearance.titleTextAttributes = [
+                .foregroundColor: UIColor.label,
+                .font: UIFont.boldSystemFont(ofSize: 20)
+            ]
+            navBar.standardAppearance = appearance
+            navBar.scrollEdgeAppearance = appearance
+            navBar.compactAppearance = appearance
+            navBar.tintColor = .label
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        setupNavigationTitle()
+        view.backgroundColor = .systemBackground
         configureTableView()
         layout()
         bindingViewModel()
-
+        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillShow),
@@ -177,6 +223,10 @@ class ChatViewController: UIViewController {
         super.viewDidLayoutSubviews()
         updateTableFooter()
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
 }
 
 extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
@@ -189,7 +239,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChatMessageCell", for: indexPath) as! ChatMessageCell
         let reversedIndex = chatViewModel.messages.count - 1 - indexPath.row
         let message = chatViewModel.messages[reversedIndex]
-        cell.configure(with: message.content)
+        cell.configure(with: message)
         return cell
     }
 }
