@@ -59,12 +59,35 @@ class ChatViewController: UIViewController {
     
     private func bindingViewModel() {
         chatViewModel = ChatViewModel(chatService: ChatAPIService())
+        
+        // 監聽訊息更新
         chatViewModel.$messages
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.tableView.reloadData()
                 self?.updateTableFooter()
                 self?.scrollToBottom()
+            }
+            .store(in: &cancellables)
+            
+        // 監聽錯誤訊息
+        chatViewModel.$errorMessage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] errorMessage in
+                if let errorMessage = errorMessage {
+                    let alert = UIAlertController(title: "錯誤", message: errorMessage, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "確定", style: .default))
+                    self?.present(alert, animated: true)
+                }
+            }
+            .store(in: &cancellables)
+            
+        // 監聽載入狀態
+        chatViewModel.$isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                // 可以在這裡更新 UI 來顯示載入狀態
+                print("載入狀態：\(isLoading)")
             }
             .store(in: &cancellables)
     }

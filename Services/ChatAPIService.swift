@@ -20,19 +20,37 @@ final class ChatAPIService: ChatServiceProtocol {
             "Content-Type": "application/json"
         ]
 
+        print("發送請求到 OpenAI API...")
+        
+        let parameters: [String: Any] = [
+            "model": request.model,
+            "messages": request.messages.map { [
+                "role": $0.role.rawValue,
+                "content": $0.content
+            ]}
+        ]
+        
+        print("請求內容：\(parameters)")
+
         AF.request(
             APIConfiguration.baseURL,
             method: .post,
-            parameters: request,
-            encoder: JSONParameterEncoder.default,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
             headers: headers
         )
         .validate()
         .responseDecodable(of: ChatResponse.self) { response in
             switch response.result {
             case .success(let chatResponse):
+                print("收到成功回應：\(chatResponse)")
                 completion(.success(chatResponse))
             case .failure(let error):
+                print("API 錯誤：\(error)")
+                if let data = response.data,
+                   let errorJson = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                    print("錯誤詳情：\(errorJson)")
+                }
                 completion(.failure(error))
             }
         }
