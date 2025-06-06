@@ -28,11 +28,13 @@ class ChatMessageCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
+        contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupViews()
+        contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
     }
 
     private func setupViews() {

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Alamofire
 
 final class ChatViewModel: ObservableObject {
     
@@ -23,10 +24,12 @@ final class ChatViewModel: ObservableObject {
     }
     
     func sendUserMessage(_ content: String) {
-        let userMessage = ChatMessage(role: .user, content: content)
-        messages.append(userMessage)
+        if isLoading { return }
         isLoading = true
         errorMessage = nil
+        
+        let userMessage = ChatMessage(role: .user, content: content)
+        messages.append(userMessage)
         
         let request = ChatRequest(model: "gpt-3.5-turbo", messages: messages)
         
@@ -36,15 +39,19 @@ final class ChatViewModel: ObservableObject {
                 switch result {
                 case .success(let response):
                     if let reply = response.choices.first?.message {
-                           self?.messages.append(reply)
-                           print("API Response: \(response)")
-                           print("First choice: \(reply.content)")
-                       } else {
-                           print("No AI reply in response: \(response)")
-                           self?.errorMessage = "AI No Response"
-                       }
+                        self?.messages.append(reply)
+                    } else {
+                        self?.errorMessage = "AI No Response"
+                    }
                 case .failure(let error):
-                    print("API failure: \(error)")
+                    if let afError = error as? AFError,
+                       case let .responseValidationFailed(reason) = afError,
+                       case let .unacceptableStatusCode(code) = reason,
+                       code == 429 {
+                        self?.errorMessage = "請求過於頻繁，請稍後再試"
+                    } else {
+                        self?.errorMessage = "API 錯誤：\(error.localizedDescription)"
+                    }
                 }
             }
         }
